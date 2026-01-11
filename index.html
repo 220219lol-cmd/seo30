@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>USDT 区块浏览器查询（2025）：TXID 怎么查？确认数怎么读？一页搞懂</title>
+  <meta name="description" content="USDT 转账查询最关键的就是：TXID（交易哈希）、确认数（confirmations）、状态（success/pending/failed）。本页提供快速读懂浏览器页面的方法、排查顺序与可复制工单模板，并含 FAQPage JSON-LD。">
+  <meta name="keywords" content="USDT 区块浏览器查询,TXID 怎么查,确认数怎么看,TRC20 浏览器,ERC20 浏览器,BEP20 浏览器,USDT 转账查询,交易哈希" />
+  <link rel="canonical" href="https://220219lol-cmd.github.io/seo30/" />
+
+  <style>
+    :root{
+      --bg:#06160f;
+      --panel:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.12);
+      --text:#eafff2;
+      --muted:rgba(234,255,242,.72);
+      --green:#22c55e;
+      --green2:#16a34a;
+      --gold:#f4d07b;
+      --shadow:0 18px 45px rgba(0,0,0,.45);
+      --r:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 520px at 12% 0%, rgba(34,197,94,.28), transparent 55%),
+        radial-gradient(900px 420px at 88% 12%, rgba(244,208,123,.18), transparent 60%),
+        linear-gradient(180deg, #04110b 0%, #06160f 40%, #04110b 100%);
+      line-height:1.9;
+    }
+    a{color:inherit}
+    .wrap{max-width:1120px;margin:0 auto;padding:28px 16px 70px}
+    .hero{
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .badge{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:6px 12px;border-radius:999px;
+      background:rgba(34,197,94,.14);
+      border:1px solid rgba(34,197,94,.35);
+      color:#d9ffe7;font-weight:900;font-size:12px;
+    }
+    h1{margin:12px 0 6px;font-size:28px;letter-spacing:.2px}
+    .sub{margin:0;color:var(--muted);max-width:980px}
+
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;text-decoration:none;
+      font-weight:900;font-size:14px;
+      border:1px solid rgba(34,197,94,.35);
+      background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(34,197,94,.06));
+      color:#eafff2;
+    }
+    .btn.primary{
+      border-color:transparent;
+      background:linear-gradient(90deg, var(--green), var(--green2));
+      color:#032012;
+      box-shadow:0 12px 30px rgba(34,197,94,.25);
+    }
+    .btn.gold{
+      border-color:rgba(244,208,123,.45);
+      background:linear-gradient(90deg, rgba(244,208,123,.22), rgba(244,208,123,.08));
+      color:#fff6dd;
+    }
+    .btn:hover{transform:translateY(-1px);transition:.15s}
+
+    .kpis{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:16px}
+    .kpi{
+      grid-column:span 4;
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      background:rgba(255,255,255,.06);
+      padding:14px;
+    }
+    .kpi b{display:block;font-size:14px}
+    .kpi p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.kpi{grid-column:span 12} h1{font-size:24px}}
+
+    .section{
+      margin-top:16px;
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow:var(--shadow);
+    }
+    .section h2{margin:0 0 10px;font-size:20px;color:#d9ffe7}
+    .lead{margin:0;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin-top:12px}
+    .card{
+      grid-column:span 6;
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      background:rgba(255,255,255,.06);
+      padding:14px;
+    }
+    @media(max-width:900px){.card{grid-column:span 12}}
+    .card h3{margin:0 0 8px;font-size:16px}
+    .card ul{margin:0;padding-left:18px;color:var(--muted)}
+    .card li{margin:6px 0}
+
+    .table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      margin-top:12px;
+      background:rgba(0,0,0,.16);
+    }
+    .table th,.table td{padding:12px 12px;text-align:left}
+    .table th{background:rgba(34,197,94,.10);font-size:13px}
+    .table td{border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+
+    .code{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+      background:#0b1220;
+      color:#e5e7eb;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+      font-size:13px;
+      overflow:auto;
+    }
+    .callout{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px dashed rgba(244,208,123,.55);
+      background:rgba(244,208,123,.10);
+      color:#fff6dd;
+      font-weight:900;
+    }
+
+    details{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px 14px;
+      background:rgba(0,0,0,.12);
+      margin-top:10px;
+    }
+    summary{cursor:pointer;font-weight:900}
+    .fine{margin-top:14px;color:rgba(234,255,242,.60);font-size:12px}
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <span class="badge">SEO30 · 区块浏览器查询中心（TXID / 确认数 / 状态）</span>
+      <h1>USDT 区块浏览器查询（2025）：TXID 怎么查？确认数怎么读？一页搞懂</h1>
+      <p class="sub">
+        你遇到“不到账/延迟/被说风控”，先别急着来回问客服。
+        你只要抓住三件事：<b>TXID</b>（交易哈希）、<b>确认数</b>（confirmations）、<b>状态</b>（success/pending/failed）。
+        这页把“怎么看”与“怎么沟通”一次讲清。
+      </p>
+
+      <div class="btns">
+        <a class="btn primary" href="https://usdtonlinecasino.com/" target="_blank" rel="noopener">主站资源中心</a>
+        <a class="btn gold" href="https://usdtonlinecasino.com/usdt-payment-guide/" target="_blank" rel="noopener">USDT 支付教学</a>
+        <a class="btn" href="https://usdtonlinecasino.com/usdt-faq/" target="_blank" rel="noopener">USDT FAQ</a>
+        <a class="btn" href="https://usdtonlinecasino.com/usdt-news/" target="_blank" rel="noopener">USDT 最新资讯</a>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><b>TXID 是凭证</b><p>没有 TXID，多半还没真正上链</p></div>
+        <div class="kpi"><b>确认数是门槛</b><p>平台入账通常要确认数达标</p></div>
+        <div class="kpi"><b>状态决定动作</b><p>success / pending / failed 的处理不同</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1）浏览器页面你只要看这 5 个字段</h2>
+      <table class="table">
+        <thead><tr><th>字段</th><th>你看到它意味着什么</th><th>你下一步该干嘛</th></tr></thead>
+        <tbody>
+          <tr><td>TXID / Tx Hash</td><td>交易哈希（链上身份证）</td><td>复制保存 + 截图，后续沟通都靠它</td></tr>
+          <tr><td>Status</td><td>success / pending / failed</td><td>success 才有资格谈入账；pending 等确认；failed 看失败原因</td></tr>
+          <tr><td>Confirmations</td><td>确认数（越多越稳）</td><td>确认数不足就等；达标仍未入账再找平台</td></tr>
+          <tr><td>From / To</td><td>出入地址（核对方向）</td><td>核对“前6后6”，防止地址替换或填错</td></tr>
+          <tr><td>Token Transfer</td><td>USDT 代币转移记录</td><td>确认确实是 USDT（不是别的 Token）</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">✅ 只要你能拿到：TXID + 状态 + 确认数 + To 地址前6后6，沟通效率直接翻倍。</div>
+    </section>
+
+    <section class="section">
+      <h2>2）TRC20 / ERC20 / BEP20：别用“地址长相”判断网络</h2>
+      <p class="lead">
+        很多人翻车点是：以为“0x 开头就是 ERC20”。实际上 EVM 系网络地址外观可能相似，
+        <b>网络必须按对方要求</b>（TRC20/ERC20/BEP20）。
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>最稳的选择规则</h3>
+          <ul>
+            <li>对方写 TRC20 → 你就用 TRC20</li>
+            <li>对方写 ERC20 → 你就用 ERC20</li>
+            <li>对方没写清 → 先问清楚再转（别猜）</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>确认“是否选错网络”的最快方式</h3>
+          <ul>
+            <li>看收款方入金页面/说明写的网络</li>
+            <li>看你的转账记录显示的网络标签</li>
+            <li>用 TXID 在对应网络浏览器里能否查到</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3）沟通/工单模板（复制粘贴就能用）</h2>
+      <div class="code">
+【问题类型】USDT 查询 / 到账延迟排查<br>
+【网络】TRC20 / ERC20 / BEP20：_____<br>
+【金额】____ USDT<br>
+【收款地址】_____（前6：_____ / 后6：_____）<br>
+【转账时间】_____<br>
+【TXID】_____（浏览器截图已附）<br><br>
+请确认：入账所需确认数阈值是多少？若确认数已达标仍未入账，请提供：工单号、处理进度与预计完成时间（ETA）。
+      </div>
+      <div class="callout">✅ 你别只问“什么时候到账”；你要问“确认数阈值 + 工单号 + ETA”。</div>
+      <p class="fine">免责声明：本页为科普/教育用途，请遵守所在地法律与规则，自行评估风险。</p>
+    </section>
+
+    <section class="section">
+      <h2>FAQ（常见问题）</h2>
+      <details><summary>Q1：没有 TXID 正常吗？</summary><p>多数情况下代表交易还没真正广播到链上（可能未完成签名、被取消、或仍在钱包内部处理）。先确认是否真的发出。</p></details>
+      <details><summary>Q2：确认数够了为什么还没入账？</summary><p>常见原因是平台队列/批处理或风控审核。用 TXID + 截图提交工单，索要工单号与 ETA。</p></details>
+      <details><summary>Q3：能不能只看“成功”就当到账了？</summary><p>链上成功代表链上完成，但平台入账通常还需要确认数阈值与平台入账流程。</p></details>
+      <details><summary>Q4：地址前6后6要每次都核对吗？</summary><p>要。它能防剪贴板替换与手误，是最低成本的安全动作。</p></details>
+    </section>
+  </main>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"没有 TXID 正常吗？",
+        "acceptedAnswer":{"@type":"Answer","text":"多数情况下代表交易还没真正广播到链上（可能未完成签名、被取消、或仍在钱包内部处理）。先确认是否真的发出。"}},
+      {"@type":"Question","name":"确认数够了为什么还没入账？",
+        "acceptedAnswer":{"@type":"Answer","text":"常见原因是平台队列/批处理或风控审核。用 TXID + 截图提交工单，索要工单号与 ETA。"}},
+      {"@type":"Question","name":"能不能只看成功就当到账了？",
+        "acceptedAnswer":{"@type":"Answer","text":"链上成功代表链上完成，但平台入账通常还需要确认数阈值与平台入账流程。"}},
+      {"@type":"Question","name":"地址前6后6要每次都核对吗？",
+        "acceptedAnswer":{"@type":"Answer","text":"要。它能防剪贴板替换与手误，是最低成本的安全动作。"}}
+    ]
+  }
+  </script>
+</body>
+</html>
